@@ -73,7 +73,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     print("Labels:", labels)
     print("Accuracy:", accuracy)
 
-    report = classification_report(y_test, y_pred, target_names = category_names)
+    report = classification_report(Y_test, y_pred, target_names = category_names)
     print(report)
 
 

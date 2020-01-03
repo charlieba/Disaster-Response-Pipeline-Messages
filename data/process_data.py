@@ -2,7 +2,13 @@ import sys
 import pandas as pd 
 from sqlalchemy import create_engine
 
-def load_data(messages_filepath, categories_filepath):
+def load_data(messages_filepath, categories_filepath):  
+    '''
+    Function for load 2 dataset and merge in one by id
+    Args:   messages_filepath: messages.csv file path
+            categories_filepath: categories.csv file path
+    Returns: A data frame that include both datasets merged
+    '''
     
     # load messages dataset
     messages = pd.read_csv(messages_filepath) 
@@ -17,6 +23,11 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''
+    Function for clean data, splitting the categories, renaming a head for each column and dropping duplicates.
+    Args:    df: dataframe to clean. This dataframe must be the messages.csv and categories.csv merged by id. 
+    Returns: A data frame cleaned
+    '''
     # create a dataframe of the 36 individual category columns
     categories = df["categories"].str.split(";", expand=True)
     
@@ -50,6 +61,11 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''
+    Function that take a dataframe and save the dataframe into a sql lite database. 
+    Args:    database_filename: file name and path for the database.  
+    Returns: The function does not return nothing, just save the dataframe 
+    '''
     engine = create_engine('sqlite:///{}'.format(database_filename))
     df.to_sql('Messages_transformed', engine, if_exists='replace', index=False)  
 
