@@ -30,7 +30,7 @@ def load_data(database_filepath):
     engine = create_engine('sqlite:///{}'.format(database_filepath))
     df = pd.read_sql("SELECT * FROM Messages_transformed", engine)
     X = df.message.values
-    y = df.drop(columns=["id","message","original","genre"])
+    y = df.drop(columns=["id","message","original","genre","related"])
     categories = y.columns.values 
     return X, y, categories
 
