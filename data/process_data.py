@@ -37,7 +37,7 @@ def clean_data(df):
     # use this row to extract a list of new column names for categories.
     # one way is to apply a lambda function that takes everything 
     # up to the second to last character of each string with slicing
-    category_colnames = row
+    category_colnames = [x.split('-')[0] for x in row.values]
     
     # rename the columns of `categories`
     categories.columns = category_colnames
