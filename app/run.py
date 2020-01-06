@@ -10,6 +10,7 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
+from plotly.graph_objs import Heatmap
 
 
 app = Flask(__name__)
@@ -47,6 +48,14 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    top_messages_diasters = df[df == 1].count().sort_values(ascending=False).head(10)
+    top_messages_disasters_names = list(df[df == 1].count().sort_values(ascending=False).head(10).index)
+    
+    y = df.drop(columns=['id', 'message', 'original', 'genre'])
+    cat_counts = [sum(y[x]) for x in y.columns.values]
+    correlation = y.corr()
+    labels = y.columns.values
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -66,6 +75,38 @@ def index():
                 'xaxis': {
                     'title': "Genre"
                 }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=top_messages_disasters_names,
+                    y=top_messages_diasters
+                )
+            ],
+
+            'layout': {
+                'title': 'Top Categories Disasters Messages',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
+        },
+        {
+            'data': [
+                Heatmap(
+                    z=correlation.values,
+                    x=labels,
+                    y=labels
+                )
+            ],
+
+            'layout': {
+                'title': 'Correlation between variables',
+                'height': 1200
             }
         }
     ]
